@@ -6,13 +6,10 @@
     <string name="setting_gesture">Gesto</string>
     <string name="setting_gesture_desc">Ajustar como o gesto funciona</string>
     <string name="setting_actions">Ações</string>
-    <string name="settings_actions_desc">Definir as ações a serem executadas quando o gesto for realizado</string>
     <string name="setting_gates">Barreiras</string>
     <string name="setting_gates_desc">Definir situações em que o gesto não deve executar uma ação</string>
     <string name="setting_feedback">Feedback</string>
     <string name="setting_feedback_desc">Definir como o dispositivo irá te avisar quando o gesto é executado</string>
-    <string name="setting_gesture_model">Modelo do Dispositivo</string>
-    <string name="setting_gesture_model_desc">Selecionar qual modelo de dispositivo usar para o componente de machine learning</string>
     <string name="setting_feedback_vibrate">Vibrar</string>
     <string name="setting_feedback_vibrate_desc">Vibrar quando o gesto é realizado e a ação é executada</string>
     <string name="setting_feedback_wake">Acordar Dispositivo</string>
@@ -94,11 +91,7 @@
     <string name="accessibility_info_off">Serviço de Acessibilidade desativado</string>
     <string name="accessibility_info_off_desc">O gesto não irá funcionar. Toque para ativar</string>
     <string name="accessibility_info_on">Serviço de Acessibilidade ativado</string>
-    <string name="accessibility_info_on_desc">Se você deseja desativar o gesto, toque para desativar o serviço</string>
     <string name="accessibility_info_toast">Selecione "Tap, Tap" na lista de serviços de acessibilidade, ative isso e retorne para o Tap, Tap para continuar</string>
-    <string name="menu_alpha">Este aplicativo está em Alpha. Toque para obter informações.</string>
-    <string name="bs_alpha">Este aplicativo está nos estágios iniciais de desenvolvimento e foi lançado em um estado "Alpha" para permitir testes em vários dispositivos. Se você encontrar um bug, informe-o no GitHub como um issue. Se você deseja solicitar um recurso, poste isso no thread do XDA ou no GitHub.\n\nRetorne ao XDA, no Labs ou no tópico, para atualizações assim que estiverem disponíveis.\n\nObrigado pela sua paciência durante o desenvolvimento.</string>
-    <string name="bs_alpha_title">Alpha</string>
 
     <string name="category_about">Sobre</string>
     <string name="about">%1s v%2s</string>

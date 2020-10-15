@@ -6,13 +6,10 @@
     <string name="setting_gesture">Жест</string>
     <string name="setting_gesture_desc">Налаштуйте, як працює жест</string>
     <string name="setting_actions">Дії</string>
-    <string name="settings_actions_desc">Встановіть дії, які слід виконувати, коли використовується жест</string>
     <string name="setting_gates">Заборони</string>
     <string name="setting_gates_desc">Визначте ситуації, коли жест не повинен виконувати дію</string>
     <string name="setting_feedback">Зворотний зв\'язок</string>
     <string name="setting_feedback_desc">Встановіть, як пристрій повідомляє вас про запуск жесту</string>
-    <string name="setting_gesture_model">Модель пристрою</string>
-    <string name="setting_gesture_model_desc">Виберіть, яку модель пристрою використовувати для компонента машинного навчання</string>
     <string name="setting_feedback_vibrate">Вібрація</string>
     <string name="setting_feedback_vibrate_desc">Вібрувати один раз, коли використовується жест, і дія виконується</string>
     <string name="setting_feedback_wake">Будити пристрій</string>
@@ -78,7 +75,7 @@
     <string name="show_system_apps">Показати системні додатки</string>
     <string name="select_an_app">Виберіть додаток</string>
     <string name="setting_gesture_sensitivity">Чутливість</string>
-    <string name="setting_gesture_sensitivity_desc"><b>Експериментально:</b> Змініть чутливість жесту, регулюючи, скільки сили відфільтрувати як "шум". Зниження чутливості означає, що цей жест буде складніше зробити на більшості пристроїв, тоді як більша чутливість більш схильна до помилкового виявлення. За замовчуванням — саме посередині.</string>
+    <string name="setting_gesture_sensitivity_desc">Змініть чутливість жесту, регулюючи, скільки сили відфільтрувати як "шум". Зниження чутливості означає, що цей жест буде складніше зробити на більшості пристроїв, тоді як більша чутливість більш схильна до помилкового виявлення. За замовчуванням — саме посередині.</string>
 
     <string name="bs_help_action_title">Що таке Дії?</string>
     <string name="bs_help_gate">Заборони — це ситуації, які можуть блокувати жест від виконання будь-яких дій. Для виконання будь-якої дії всі включені заборони не повинні справджуватися. \nЯкщо сценарій наразі виконується, наприклад, якщо екран вимкнено та параметр \"Екран вимкнений\", жодні дії не виконуватимуться. Ви можете додати скільки завгодно заборон і включити/відключити їх за допомогою перемикачів (замість того, щоб видаляти та повторно додавати), щоб зробити налаштування швидшим та простішим.</string>
@@ -92,11 +89,7 @@
     <string name="accessibility_info_off">Служба доступності вимкнена</string>
     <string name="accessibility_info_off_desc">Зараз жест не працюватиме. Торкніться, щоб увімкнути</string>
     <string name="accessibility_info_on">Служба доступності увімкнена</string>
-    <string name="accessibility_info_on_desc">Якщо ви хочете відключити жест, торкніться, щоб відключити службу</string>
     <string name="accessibility_info_toast">Виберіть \"Tap, Tap\" зі списку служб доступності, увімкніть його та поверніться до \"Tap, Tap\", щоб продовжити</string>
-    <string name="menu_alpha">Ця програма знаходиться альфа-тестуванні. Натисніть для інформації.</string>
-    <string name="bs_alpha">Цей додаток знаходиться на ранніх стадіях розробки й був випущений у стані \"Альфа\", що дозволяє проводити тестування на багатьох пристроях, що дозволяє проводити тестування на багатьох пристроях. Якщо ви хочете подати запит на функцію, опублікуйте її у вітці XDA або надішліть її на GitHub. \n\nСлідкуйте в лабораторії або вітці XDA за оновленнями. \n\nДякую за терпіння в процесі розробки.</string>
-    <string name="bs_alpha_title">Альфа</string>
 
     <string name="category_about">Про</string>
     <string name="about_summary">Створено Kieron Quinn / Quinny899 @ XDA\nЗавдяки внескам громади, в тому числі: %1s</string>

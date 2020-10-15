@@ -1,10 +1,11 @@
 package com.kieronquinn.app.taptap.models
 
+import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.kieronquinn.app.taptap.R
 import com.kieronquinn.app.taptap.columbus.actions.*
-import com.kieronquinn.app.taptap.utils.AccessibilityServiceGlobalAction
+import com.kieronquinn.app.taptap.columbus.actions.AccessibilityServiceGlobalAction
 import com.kieronquinn.app.taptap.columbus.actions.LaunchCamera
 import com.kieronquinn.app.taptap.utils.minSdk
 
@@ -25,11 +26,12 @@ enum class TapAction(val clazz: Class<*>, val category: TapActionCategory, @Stri
     LAUNCH_APP(LaunchApp::class.java, TapActionCategory.LAUNCH, R.string.action_launch_app, R.string.action_launch_app_desc, R.drawable.ic_action_category_launch, true, true, false, R.string.action_launch_app_desc_formattable, ActionDataTypes.PACKAGE_NAME),
     LAUNCH_SHORTCUT(LaunchShortcut::class.java, TapActionCategory.LAUNCH, R.string.action_launch_shortcut, R.string.action_launch_shortcut_desc, R.drawable.ic_action_shortcut, true, true, false, R.string.action_launch_shortcut_desc_formattable, ActionDataTypes.SHORTCUT),
     LAUNCH_ASSISTANT(LaunchAssistant::class.java, TapActionCategory.LAUNCH, R.string.action_launch_assistant, R.string.action_launch_assistant_desc, R.drawable.ic_launch_assistant, true, true, false),
+    LAUNCH_SEARCH(LaunchSearch::class.java, TapActionCategory.LAUNCH, R.string.action_launch_search, R.string.action_launch_search_desc, R.drawable.ic_search, true, true, false),
     LAUNCH_CAMERA(LaunchCamera::class.java, TapActionCategory.LAUNCH, R.string.action_launch_camera, R.string.action_launch_camera_desc, R.drawable.ic_camera_visibility, true, true, false, dataType = ActionDataTypes.CAMERA_PERMISSION),
-    SCREENSHOT(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_screenshot, R.string.action_screenshot_desc, R.drawable.ic_action_screenshot, minSdk(28), true, true),
+    SCREENSHOT(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_screenshot, R.string.action_screenshot_desc, R.drawable.ic_action_screenshot, minSdk(Build.VERSION_CODES.P), true, true),
     NOTIFICATIONS(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_notifications, R.string.action_notifications_desc, R.drawable.ic_action_notifications, true, true, true),
     QUICK_SETTINGS(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_quick_settings, R.string.action_quick_settings_desc, R.drawable.ic_action_quick_settings, true, true, true),
-    LOCK_SCREEN(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_lock_screen, R.string.action_lock_screen_desc, R.drawable.ic_power_state, minSdk(28), true, true),
+    LOCK_SCREEN(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_lock_screen, R.string.action_lock_screen_desc, R.drawable.ic_power_state, minSdk(Build.VERSION_CODES.P), true, true),
     WAKE_DEVICE(WakeDeviceAction::class.java, TapActionCategory.ACTIONS, R.string.action_wake_device, R.string.action_wake_device_desc, R.drawable.ic_wake_from_sleep, true, true, false),
     HOME(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_home, R.string.action_home_desc, R.drawable.ic_action_home, true, true, true),
     BACK(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_back, R.string.action_back_desc, R.drawable.ic_action_back, true, true, true),
@@ -37,9 +39,11 @@ enum class TapAction(val clazz: Class<*>, val category: TapActionCategory, @Stri
     SPLIT_SCREEN(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_split_screen, R.string.action_split_screen_desc, R.drawable.ic_action_split_screen, true, true, true),
     REACHABILITY(LaunchReachability::class.java, TapActionCategory.UTILITIES, R.string.action_reachability, R.string.action_reachability_desc, R.drawable.ic_action_reachability, true, true, true),
     POWER_DIALOG(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_power_dialog, R.string.action_power_dialog_desc, R.drawable.ic_action_power_dialog, true, true, true),
+    APP_DRAWER(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_app_drawer, R.string.action_app_drawer_desc, R.drawable.ic_action_app_drawer, minSdk(Build.VERSION_CODES.R), true, true),
+    ALT_TAB(AltTabAction::class.java, TapActionCategory.ACTIONS, R.string.action_alt_tab, R.string.action_alt_tab_desc, R.drawable.ic_action_alt_tab, minSdk(Build.VERSION_CODES.N), true, true),
     FLASHLIGHT(Flashlight::class.java, TapActionCategory.UTILITIES, R.string.action_flashlight, R.string.action_flashlight_desc, R.drawable.ic_action_category_utilities, true, true, true, dataType = ActionDataTypes.CAMERA_PERMISSION),
     TASKER_EVENT(TaskerEvent::class.java, TapActionCategory.ADVANCED, R.string.action_tasker_event, R.string.action_tasker_event_desc, R.drawable.ic_action_tasker, true, true, true),
-    TASKER_TASK(TaskerTask::class.java, TapActionCategory.ADVANCED, R.string.action_tasker_task, R.string.action_tasker_task_desc, R.drawable.ic_action_tasker, true, true, true, dataType = ActionDataTypes.TASKER_TASK),
+    TASKER_TASK(TaskerTask::class.java, TapActionCategory.ADVANCED, R.string.action_tasker_task, R.string.action_tasker_task_desc, R.drawable.ic_action_tasker, true, true, true, R.string.action_tasker_task_desc_formatted, dataType = ActionDataTypes.TASKER_TASK),
     TOGGLE_PAUSE(MusicAction::class.java, TapActionCategory.ACTIONS, R.string.action_toggle_pause, R.string.action_toggle_pause_desc, R.drawable.ic_action_toggle_pause, true, true, true),
     PREVIOUS(MusicAction::class.java, TapActionCategory.ACTIONS, R.string.action_previous, R.string.action_previous_desc, R.drawable.ic_action_previous, true, true, true),
     NEXT(MusicAction::class.java, TapActionCategory.ACTIONS, R.string.action_next, R.string.action_next_desc, R.drawable.ic_action_next, true, true, true),
@@ -47,7 +51,14 @@ enum class TapAction(val clazz: Class<*>, val category: TapActionCategory, @Stri
     VOLUME_PANEL(VolumeAction::class.java, TapActionCategory.ACTIONS, R.string.action_volume_panel, R.string.action_volume_panel_desc, R.drawable.ic_action_volume_panel, true, true, true),
     VOLUME_UP(VolumeAction::class.java, TapActionCategory.ACTIONS, R.string.action_volume_up, R.string.action_volume_up_desc, R.drawable.ic_action_volume_up, true, true, true),
     VOLUME_DOWN(VolumeAction::class.java, TapActionCategory.ACTIONS, R.string.action_volume_down, R.string.action_volume_down_desc, R.drawable.ic_action_volume_down, true, true, true),
-    VOLUME_TOGGLE_MUTE(VolumeAction::class.java, TapActionCategory.ACTIONS, R.string.action_volume_toggle_mute, R.string.action_volume_toggle_mute_desc, R.drawable.ic_action_volume_toggle_mute, true, true, true)
+    VOLUME_TOGGLE_MUTE(VolumeAction::class.java, TapActionCategory.ACTIONS, R.string.action_volume_toggle_mute, R.string.action_volume_toggle_mute_desc, R.drawable.ic_action_volume_toggle_mute, true, true, true),
+    ALARM_TIMER(AlarmTimerAction::class.java, TapActionCategory.ACTIONS, R.string.action_alarm_timer, R.string.action_alarm_timer_desc, R.drawable.ic_gate_alarm, true, true, true),
+    ALARM_SNOOZE(AlarmSnoozeAction::class.java, TapActionCategory.ACTIONS, R.string.action_alarm_snooze, R.string.action_alarm_snooze_desc, R.drawable.ic_action_alarm_snooze, true, true, true),
+    GOOGLE_VOICE_ACCESS(GoogleVoiceAccessAction::class.java, TapActionCategory.ACTIONS, R.string.action_google_voice_access, R.string.action_google_voice_access_desc, R.drawable.ic_action_google_voice_access, true, true, true),
+    ACCESSIBILITY_BUTTON(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_accessibility_button, R.string.action_accessibility_button_desc, R.drawable.ic_action_accessibility, minSdk(Build.VERSION_CODES.R), true, true),
+    ACCESSIBILITY_BUTTON_CHOOSER(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_accessibility_button_chooser, R.string.action_accessibility_button_chooser_desc, R.drawable.ic_action_accessibility, minSdk(Build.VERSION_CODES.R), true, true),
+    ACCESSIBILITY_SHORTCUT(AccessibilityServiceGlobalAction::class.java, TapActionCategory.ACTIONS, R.string.action_accessibility_shortcut, R.string.action_accessibility_shortcut_desc, R.drawable.ic_action_accessibility, minSdk(Build.VERSION_CODES.R), true, true),
+    HAMBURGER(HamburgerAction::class.java, TapActionCategory.ADVANCED, R.string.action_hamburger, R.string.action_hamburger_desc, R.drawable.ic_action_hamburger, minSdk(Build.VERSION_CODES.N), true, true, dataType = ActionDataTypes.SECONDARY_GESTURE_SERVICE)
 }
 
 enum class ActionDataTypes {
@@ -55,5 +66,6 @@ enum class ActionDataTypes {
     CAMERA_PERMISSION,
     TASKER_TASK,
     SHORTCUT,
-    ACCESS_NOTIFICATION_POLICY
+    ACCESS_NOTIFICATION_POLICY,
+    SECONDARY_GESTURE_SERVICE
 }

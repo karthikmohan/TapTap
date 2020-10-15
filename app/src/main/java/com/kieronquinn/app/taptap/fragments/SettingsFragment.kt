@@ -1,41 +1,44 @@
 package com.kieronquinn.app.taptap.fragments
 
-import android.app.NotificationManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.graphics.Color
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.os.PowerManager
+import android.provider.AlarmClock
 import android.provider.Settings
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.kieronquinn.app.taptap.BuildConfig
 import com.kieronquinn.app.taptap.R
-import com.kieronquinn.app.taptap.TapAccessibilityService
+import com.kieronquinn.app.taptap.services.TapAccessibilityService
 import com.kieronquinn.app.taptap.activities.SettingsActivity
-import com.kieronquinn.app.taptap.columbus.actions.SoundProfileAction
-import com.kieronquinn.app.taptap.fragments.bottomsheets.GenericBottomSheetFragment
+import com.kieronquinn.app.taptap.fragments.bottomsheets.BatteryOptimisationBottomSheetFragment
+import com.kieronquinn.app.taptap.fragments.bottomsheets.MaterialBottomSheetDialogFragment
+import com.kieronquinn.app.taptap.models.store.DoubleTapActionListFile
+import com.kieronquinn.app.taptap.models.store.TripleTapActionListFile
 import com.kieronquinn.app.taptap.preferences.Preference
-import com.kieronquinn.app.taptap.utils.Links
-import com.kieronquinn.app.taptap.utils.isAccessibilityServiceEnabled
+import com.kieronquinn.app.taptap.services.TapGestureAccessibilityService
+import com.kieronquinn.app.taptap.utils.*
 import java.lang.RuntimeException
 
 class SettingsFragment : BaseSettingsFragment() {
 
-    private  val TAG = "SettingsFragment"
+    private var isWaitingForAccessibility = false
+
+    private val TAG = "SettingsFragment"
     private val returnReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
-            context?.unregisterReceiver(this)
+            context?.unregisterReceiverOpt(this)
+            isWaitingForAccessibility = false
             try {
-                startActivity(Intent(context, SettingsActivity::class.java))
+                startActivity(Intent(context, SettingsActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                })
             }catch (e: RuntimeException){
                 //Fragment isn't attached
             }
@@ -57,6 +60,12 @@ class SettingsFragment : BaseSettingsFragment() {
                 true
             }
         }
+        getPreference("actions_triple"){
+            it.setOnPreferenceClickListener {
+                navigate(R.id.action_settingsFragment_to_settingsActionTripleFragment)
+                true
+            }
+        }
         getPreference("gates"){
             it.setOnPreferenceClickListener {
                 navigate(R.id.action_settingsFragment_to_settingsGateFragment)
@@ -66,6 +75,12 @@ class SettingsFragment : BaseSettingsFragment() {
         getPreference("feedback"){
             it.setOnPreferenceClickListener {
                 navigate(R.id.action_settingsFragment_to_settingsFeedbackFragment)
+                true
+            }
+        }
+        getPreference("advanced"){
+            it.setOnPreferenceClickListener {
+                navigate(R.id.action_settingsFragment_to_settingsAdvancedFragment)
                 true
             }
         }
@@ -107,12 +122,15 @@ class SettingsFragment : BaseSettingsFragment() {
 
     override fun onResume() {
         super.onResume()
+        isWaitingForAccessibility = false
         setHomeAsUpEnabled(false)
         val isServiceEnabled = isAccessibilityServiceEnabled(requireContext(), TapAccessibilityService::class.java)
+        val isGestureServiceRequired = DoubleTapActionListFile.isGestureServiceRequired(requireContext()) || TripleTapActionListFile.isGestureServiceRequired(requireContext())
+        val isGestureServiceEnabled = isAccessibilityServiceEnabled(requireContext(), TapGestureAccessibilityService::class.java)
         getPreference("accessibility"){
             if(isServiceEnabled){
                 it.title = getString(R.string.accessibility_info_on)
-                it.summary = getString(R.string.accessibility_info_on_desc)
+                it.summary = getString(R.string.accessibility_info_on_desc_2)
                 it.icon = ContextCompat.getDrawable(it.context, R.drawable.ic_accessibility_check_round)
             }else{
                 it.title = getString(R.string.accessibility_info_off)
@@ -121,9 +139,45 @@ class SettingsFragment : BaseSettingsFragment() {
             }
             it.setOnPreferenceClickListener { _ ->
                 context?.registerReceiver(returnReceiver, IntentFilter(TapAccessibilityService.KEY_ACCESSIBILITY_START))
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+                    val bundle = Bundle()
+                    val componentName = ComponentName(BuildConfig.APPLICATION_ID, TapAccessibilityService::class.java.name).flattenToString()
+                    bundle.putString(EXTRA_FRAGMENT_ARG_KEY, componentName)
+                    putExtra(EXTRA_FRAGMENT_ARG_KEY, componentName)
+                    putExtra(EXTRA_SHOW_FRAGMENT_ARGUMENTS, bundle)
+                })
+                isWaitingForAccessibility = true
                 activity?.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                 Toast.makeText(it.context, R.string.accessibility_info_toast, Toast.LENGTH_LONG).show()
+                true
+            }
+        }
+        getPreference("accessibility_gesture"){
+            if(!isGestureServiceRequired && isGestureServiceEnabled) {
+                it.isVisible = true
+                it.title = getString(R.string.accessibility_info_on_gesture)
+                it.summary = getString(R.string.accessibility_info_on_gesture_desc)
+                it.icon = ContextCompat.getDrawable(it.context, R.drawable.ic_warning_round)
+            }else if(isGestureServiceRequired && !isGestureServiceEnabled){
+                it.isVisible = true
+                it.title = getString(R.string.accessibility_info_off_gesture)
+                it.summary = getString(R.string.accessibility_info_off_gesture_desc)
+                it.icon = ContextCompat.getDrawable(it.context, R.drawable.ic_accessibility_cross_round)
+            }else{
+                it.isVisible = false
+            }
+            it.setOnPreferenceClickListener { _ ->
+                context?.registerReceiver(returnReceiver, IntentFilter(TapAccessibilityService.KEY_ACCESSIBILITY_START))
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+                    val bundle = Bundle()
+                    val componentName = ComponentName(BuildConfig.APPLICATION_ID, TapGestureAccessibilityService::class.java.name).flattenToString()
+                    bundle.putString(EXTRA_FRAGMENT_ARG_KEY, componentName)
+                    putExtra(EXTRA_FRAGMENT_ARG_KEY, componentName)
+                    putExtra(EXTRA_SHOW_FRAGMENT_ARGUMENTS, bundle)
+                })
+                isWaitingForAccessibility = true
+                activity?.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+                Toast.makeText(it.context, R.string.accessibility_info_toast_gesture, Toast.LENGTH_LONG).show()
                 true
             }
         }
@@ -132,7 +186,6 @@ class SettingsFragment : BaseSettingsFragment() {
             it.isVisible = !powerManager.isIgnoringBatteryOptimizations(BuildConfig.APPLICATION_ID)
         }
 
-        val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         view?.post {
             getPreference("accessibility"){
                 if(isServiceEnabled) {
@@ -141,28 +194,62 @@ class SettingsFragment : BaseSettingsFragment() {
                     it.setBackgroundTint(ContextCompat.getColor(it.context, R.color.accessibility_cross_circle))
                 }
             }
+            getPreference("accessibility_gesture"){
+                if(it.isVisible) {
+                    if(isGestureServiceRequired) {
+                        it.setBackgroundTint(ContextCompat.getColor(it.context, R.color.accessibility_cross_circle))
+                    }else{
+                        it.setBackgroundTint(ContextCompat.getColor(it.context, R.color.icon_circle_10))
+                    }
+                }
+            }
             getPreference("battery_optimisation"){
                 it.setBackgroundTint(ContextCompat.getColor(it.context, R.color.icon_circle_10))
             }
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        if(!isWaitingForAccessibility){
+            requireContext().unregisterReceiverOpt(returnReceiver)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_main, menu)
+        (activity as? SettingsActivity)?.updateChecker?.newUpdate?.run {
+            observe(this@SettingsFragment, Observer {
+                menu.findItem(R.id.menu_update).isVisible = it != null
+            })
+            menu.findItem(R.id.menu_update).isVisible = this.value != null
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.menu_alpha -> {
-                GenericBottomSheetFragment.create(getString(R.string.bs_alpha), R.string.bs_alpha_title, android.R.string.ok).show(childFragmentManager, "bs_alpha")
+            R.id.menu_beta -> {
+                MaterialBottomSheetDialogFragment.create(MaterialBottomSheetDialogFragment(), childFragmentManager, "bs_alpha"){
+                    it.title(R.string.bs_beta_title)
+                    it.message(R.string.bs_beta)
+                }
+            }
+            R.id.menu_update -> {
+                (activity as? SettingsActivity)?.showUpdateBottomSheet(force = true)
+            }
+            R.id.menu_setup_wizard -> {
+                startActivity(Intent(context, SettingsActivity::class.java).apply {
+                    putExtra(SettingsActivity.FORCE_RERUN_SETUP, true)
+                })
+                activity?.finish()
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun showBatteryInfoBottomSheet(){
-        GenericBottomSheetFragment.create(getString(R.string.bs_battery_content), R.string.battery_and_optimisation, android.R.string.ok, R.string.bs_battery_positive, "https://dontkillmyapp.com/").show(childFragmentManager, "bs_alpha")
+        MaterialBottomSheetDialogFragment.create(BatteryOptimisationBottomSheetFragment(), childFragmentManager, "bs_battery_optimisation"){}
     }
 
 }

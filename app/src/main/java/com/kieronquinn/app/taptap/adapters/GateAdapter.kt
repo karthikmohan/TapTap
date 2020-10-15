@@ -20,10 +20,16 @@ class GateAdapter(private val context: Context, private val items: MutableList<G
     val isItemSelected
         get() = currentlySelectedPosition != -1
 
+    var listChangeListener: ((Int) -> Unit)? = null
+
     interface GateCallback {
         fun onGateChange(gates: List<GateInternal>)
         fun onGateSelected()
         fun onGateDeselected()
+    }
+
+    fun notifyListener(){
+        listChangeListener?.invoke(itemCount)
     }
 
     private val layoutInflater by lazy {
@@ -36,6 +42,11 @@ class GateAdapter(private val context: Context, private val items: MutableList<G
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        notifyListener()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -53,11 +64,11 @@ class GateAdapter(private val context: Context, private val items: MutableList<G
                 getFormattedDataForGate(context, item.gate, item.data)?.let {
                     item_gate_description.text = context.getString(item.gate.formattableDescription, it)
                 } ?: run {
-                    item_gate_description.text = context.getString(descriptionRes)
+                    item_gate_description.text = context.getText(descriptionRes)
                 }
 
             }else{
-                item_gate_description.text = context.getString(descriptionRes)
+                item_gate_description.text = context.getText(descriptionRes)
             }
             item_gate_icon.setImageResource(item.gate.iconRes)
             if(isAdd){
@@ -109,6 +120,7 @@ class GateAdapter(private val context: Context, private val items: MutableList<G
         currentlySelectedPosition = -1
         listener.onGateDeselected()
         listener.onGateChange(items)
+        notifyListener()
     }
 
     fun deselectItem() {
